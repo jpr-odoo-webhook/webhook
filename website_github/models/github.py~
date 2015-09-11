@@ -9,4 +9,4 @@ class GithubWebhook(models.Model):
     name = fields.Char(string="Customize Name")
     channel_id = fields.Many2one('mail.channel', string="Channel")
     repository = fields.Char(string="Repository")
-    webhook = fields.Char(string="WebHook ID", help="test")
+    webhook = fields.Char(string="WebHook ID")
