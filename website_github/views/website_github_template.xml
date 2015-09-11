@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="github_webhook_template" name="GitHub Webhook" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link type="text/less" href="/website_github/static/src/less/github_webhook.less" rel="stylesheet" t-ignore="true" />
+            <script type="text/javascript" src="/website_github/static/src/js/github_widget.js"></script>
+        </xpath>
+    </template>
+
+    <template id="github_webhook_frontend_template" name="GitHub Webhook Frontend" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <link type="text/less" href="/website_github/static/src/less/github_webhook.less" rel="stylesheet" t-ignore="true" />
+        </xpath>
+    </template>
+
+    <template id="github_footer_custom" inherit_id="website.footer_default" name="Footer Github Link">
+        <xpath expr="//div[@id='info']/ul" position="inside">
+            <li>
+                <a href="/github">GitHub</a>
+            </li>
+        </xpath>
+    </template>
+    <template id="github_view" name="View">
+        <t t-call="website.layout">
+            <t t-set="title">GitHub</t>
+                <div class="oe_structure">
+                    <div class="container">
+                        <t t-foreach="users" t-as="user">
+                            <p><a> <t t-esc="user['html_url']"/> </a> <t t-esc="user['title']"/></p>
+                            <div>
+                                <t t-esc="user['body']"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+        </t>
+    </template>
+
+    <!-- Github Integration Templates -->
+    <template id="github_integration_template" name="Github Integration">
+        <t t-call="website.layout">
+             <t t-set="title">GitHub Integration</t>
+             <div class="oe_structure">
+                <div class="container">
+                    <form action="/website_github/create/webhook" method="post" class="form-inline">
+                        <p>
+                            <p>
+                                <font face="Lato,appleLogo,sans-serif">
+                                <h4>GitHub offers online source code hosting for Git projects, with powerful collaboration, code review, and issue tracking.<br/><br/>
+                                This integration will post commits, pull requests, and activity on GitHub Issues to a channel in Odoo.</h4>
+                                </font>
+                            </p>
+                            <div class="panel panel-default">
+                                <div class="row">
+                                    <div class="col-sm-12 col">
+                                    <h3>Integration Settings</h3>
+                                    <div class="col-sm-3">
+                                        <h4>Authentication</h4>
+                                    </div>
+                                    <div class="col-sm-9 form-group has-success">
+                                        <label for="user" class="control-label">Authenticated by:</label>
+                                        <input type="text" name="user" t-att-value="user" class="form-control odoo_form_control_width" readonly="readonly"/>
+                                    </div>
+                                    <hr class="odoo_clear_div"/>
+                                    <div>
+                                        <h4>Repositories</h4>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Which repositories should we listen to events on?
+                                    </div>
+                                    <div id="repo_list" class="col-sm-9">
+                                        <select t-if="repos" class="form-control odoo_form_control_width" name="repos">
+                                            <t t-foreach="repos" t-as="repo">
+                                                <option t-att-value='repo'><t t-esc='repo'/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <hr class="odoo_clear_div"/>
+                                    <div>
+                                        <h4>Events</h4>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Choose the GitHub events that you want posted to Odoo.
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <h5>COMMIT EVENTS</h5>
+                                        <label for="commits" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="commits" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                            Commits pushed to the repository
+                                        </label>
+                                        <label for="commits_comment" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="commits_comment" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                            New comment on commit
+                                        </label>
+                                        <hr class="odoo_clear_div"/>
+                                        <h5>ISSUE / PULL REQUEST EVENTS</h5>
+                                        <label for="pull" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="pull" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                             Pull request opened or closed
+                                        </label>
+                                        <label for="issues" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="issues" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                            Issues opened or closed
+                                        </label>
+                                        <label for="new_comment" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="new_comment" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                             New comment on issue or pull request
+                                        </label>
+                                        <label for="show_title" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="show_title" t-att-checked="checked" t-att-value="0" />
+                                             Only show titles of new issues and pull requests
+                                        </label>
+                                        <hr class="odoo_clear_div"/>
+                                        <h5>DEPLOY EVENTS</h5>
+                                        <label for="deploy_event" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="deploy_event" t-att-checked="checked" t-att-value="0"/>
+                                             Show deployment statuses
+                                        </label>
+                                        <hr class="odoo_clear_div"/>
+                                        <h5>OTHER EVENTS</h5>
+                                        <label for="branch_created" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="branch_created" t-att-checked="checked" t-att-value="1" checked="checked"/>
+                                             Branch or tag created or deleted
+                                        </label>
+                                        <label for="branch_force_pushed" class="odoo_checkbox_event">
+                                            <input type="checkbox" name="branch_force_pushed" t-att-checked="checked" t-att-value="0" />
+                                             Branch force-pushed
+                                        </label>
+                                    </div>
+                                    <hr class="odoo_clear_div"/>
+                                    <div>
+                                        <h4>Post to Channel</h4>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Notifications that come in from GitHub will be posted here.
+                                    </div>
+                                    <div id="channel_list" class="col-sm-9">
+                                        <select t-if="channel" class="form-control odoo_form_control_width" name="channel">
+                                            <t t-foreach="channel" t-as="channel_id">
+                                                <option t-att-value='channel_id.id'><t t-esc='channel_id.name'/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <hr class="odoo_clear_div"/>
+                                    <div>
+                                        <h4>Customize Name</h4>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Choose the username that this integration will post as.
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="name" value="Github" t-esc='GitHub' class="form-control odoo_form_control_width"/>
+                                    </div>
+                                    <div class="col-sm-9 odoo_button_margin">
+                                        <button type="submit" name="save_intigration" class="btn btn-primary">Save Integration</button>
+                                    </div>
+                                    <div/>
+                                </div>
+                                </div>
+
+                            </div>
+                        </p>
+                    </form>
+                </div>
+             </div>
+        </t>
+    </template>
+
+
+</odoo>

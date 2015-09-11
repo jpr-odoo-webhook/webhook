@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherited_res_config_view_form_website_github" model="ir.ui.view">
+        <field name="name">Github_settings</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='google_analytics']" position="after">
+                <group>
+                    <label for="id" string="GitHub Webhook"/>
+                    <div>
+                        <div>
+                            <label for="github_sync"/>
+                            <field name="github_sync" class="oe_inline"/>
+                            <div>
+                                <div attrs="{'invisible':[('github_sync','=',False)]}">
+                                    <br/><h2>To setup the signin process with GitHub, first you have to perform the following steps</h2>
+                                    <ul>
+                                        <li> Connect on your github account and go to <a href='https://github.com/settings/developers' target='_blank'> register your application </a> </li>
+                                        <li> 
+                                            Click on <b>"Register New Application"</b>.
+                                            <br/><br/><img src='/website_github/static/src/img/GC/Github_register_app.png' 
+                                            class='odoo_github_webhook_img_tuto'/>
+                                        </li>
+                                        <li>
+                                            1. Under Application name, type the name that you would like to appear (e.g. your company's name or "GitHub Enterprise").<br/>
+                                            2. Under Homepage URL, type the URL of your GitHub Enterprise appliance.<br/>
+                                            3. Under Authorization callback URL, type the URL of your appliance followed by /github/application/authorization.
+                                            <br/><br/><img src='/website_github/static/src/img/GC/NewOAuthApplication.png' class='odoo_github_webhook_img_tuto'/>
+                                        </li>
+                                        <li>
+                                            Click on Register Application.
+                                        </li>
+                                        <li>
+                                            Once done, you will have the both informations (Client ID and Client Secret) that you need to insert in the 2 fields below !.
+                                            <br/><br/><img src='/website_github/static/src/img/GC/Github_OAuth_Appl.png' class='odoo_github_webhook_img_tuto'/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <group>
+                                    <div class="github_webhook_settings">
+                                        <group>
+                                            <div>
+                                                <label for="github_client_id" string="GitHub Client ID" />
+                                                <field name="github_client_id" class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div>
+                                                <label for="github_client_secret" string="GitHub Client Secret"/>
+                                                <field name="github_client_secret" class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <div>
+                                                <field name="github_webhook_authorization" widget="github_token"/>
+                                            </div>
+                                        </group>
+                                    </div>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
